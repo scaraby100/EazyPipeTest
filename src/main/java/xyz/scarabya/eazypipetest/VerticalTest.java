@@ -7,7 +7,7 @@ package xyz.scarabya.eazypipetest;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 import xyz.scarabya.eazypipe.EazyPipe;
-import xyz.scarabya.eazypipe.ThreadPipe;
+import xyz.scarabya.eazypipe.Pipeable;
 
 /**
  *
@@ -27,13 +27,15 @@ public class VerticalTest
         
         Consumer cons = new Consumer();
         
-        ThreadPipe finalCons = new ThreadPipe(cons, "consume");
+        Pipeable finalCons = new Pipeable(cons, "consume");
         
         Banana banana = new Banana();
         
-        EazyPipe vout = vert.runPipe(new ThreadPipe(prod, "produce", 3))
-                .runPipe(new ThreadPipe(cons, "consume", banana))
+        /*EazyPipe vout = vert.runPipe(new Pipeable(prod, "produce", 3))
+                .runPipe(new Pipeable(cons, "consume", banana))
                 .runPipe(finalCons);
+*/
+        EazyPipe vout = vert.runPipe(new Pipeable(prod, "produce"));
         
         printChannel(vout.getOutput());
         
