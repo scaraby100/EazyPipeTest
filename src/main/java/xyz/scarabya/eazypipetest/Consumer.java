@@ -5,6 +5,9 @@
  */
 package xyz.scarabya.eazypipetest;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import xyz.scarabya.eazypipe.EazyPipe;
 import xyz.scarabya.eazypipe.ThreadPipe;
 
 /**
@@ -16,7 +19,7 @@ public class Consumer
 
     public void consume(ThreadPipe pipe)
     {
-        while (true)
+        while (pipe.run())
         {
             String s = (String) pipe.input();
             if (s != null)
@@ -37,6 +40,14 @@ public class Consumer
                 {
                     pipe.output(s + " TEST CONSUMER");
                 }
+            }
+            try
+            {
+                Thread.sleep(Math.round(Math.random()*1000));
+            }
+            catch (InterruptedException ex)
+            {
+                Logger.getLogger(EazyPipe.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }

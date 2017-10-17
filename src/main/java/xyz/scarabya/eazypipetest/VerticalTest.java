@@ -7,7 +7,9 @@ package xyz.scarabya.eazypipetest;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 import xyz.scarabya.eazypipe.EazyPipe;
+import xyz.scarabya.eazypipe.EazyPipeStart;
 import xyz.scarabya.eazypipe.Pipeable;
+import xyz.scarabya.eazypipe.ThreadPipeManager;
 
 /**
  *
@@ -21,21 +23,23 @@ public class VerticalTest
      */
     public static void main(String[] args)
     {
-        EazyPipe vert = new EazyPipe();
-        
         Producer prod = new Producer();
         
         Consumer cons = new Consumer();
         
-        Pipeable finalCons = new Pipeable(cons, "consume");
+        Pipeable finalCons = new Pipeable(cons, "consume", 10, true);
         
         Banana banana = new Banana();
         
-        /*EazyPipe vout = vert.runPipe(new Pipeable(prod, "produce", 3))
-                .runPipe(new Pipeable(cons, "consume", banana))
+        DummyIO ioDisk = new DummyIO();
+        
+        EazyPipe vout = EazyPipeStart.runPipe(new Pipeable(prod, "produce", 10, ioDisk, true))
+                .runPipe(new Pipeable(cons, "consume", 10, banana, true))
                 .runPipe(finalCons);
-*/
-        EazyPipe vout = vert.runPipe(new Pipeable(prod, "produce"));
+        
+        //EazyPipe vout = vert.runPipe(new Pipeable(prod, "produce"));
+        
+        ThreadPipeManager.startAutoManager(vout);
         
         printChannel(vout.getOutput());
         
@@ -47,8 +51,11 @@ public class VerticalTest
         while (true)
         {
             String s = (String) channel.poll();
-            if (s != null)
-                System.out.println(s);
+            if(false)
+            {
+                if (s != null)
+                    System.out.println(s);
+            }
         }
     }
     
