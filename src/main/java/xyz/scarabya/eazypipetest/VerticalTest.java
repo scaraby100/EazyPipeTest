@@ -33,8 +33,8 @@ public class VerticalTest
         
         DummyIO ioDisk = new DummyIO();
         
-        EazyPipe vout = EazyPipeStart.runPipe(new Pipeable(prod, "produce", 10, ioDisk, true))
-                .runPipe(new Pipeable(cons, "consume", 10, banana, true))
+        EazyPipe vout = EazyPipeStart.runPipe(new Pipeable(prod, "produce", 2, ioDisk, true))
+                .runPipe(new Pipeable(cons, "consume", 2, banana, true))
                 .runPipe(finalCons);
         
         //EazyPipe vout = vert.runPipe(new Pipeable(prod, "produce"));

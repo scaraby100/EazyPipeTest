@@ -41,14 +41,6 @@ public class Consumer
                     pipe.output(s + " TEST CONSUMER");
                 }
             }
-            try
-            {
-                Thread.sleep(Math.round(Math.random()*1000));
-            }
-            catch (InterruptedException ex)
-            {
-                Logger.getLogger(EazyPipe.class.getName()).log(Level.SEVERE, null, ex);
-            }
         }
     }
 }

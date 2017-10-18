@@ -18,8 +18,7 @@ public class Producer
         DummyIO io = (DummyIO) pipe.args();
         while(pipe.run())
         {            
-            if(!io.isBlocked())
-                pipe.output(io.input() + " TEST PRODUCER");
+            pipe.output(io.input() + " TEST PRODUCER");
         }
     }
 }

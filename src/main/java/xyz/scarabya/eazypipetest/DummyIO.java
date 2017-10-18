@@ -5,9 +5,13 @@
  */
 package xyz.scarabya.eazypipetest;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import xyz.scarabya.eazypipe.EazyPipe;
 
 /**
  *
@@ -15,24 +19,32 @@ import xyz.scarabya.eazypipe.EazyPipe;
  */
 public class DummyIO
 {
-    private boolean block = false;
-    public synchronized String input()
+    private final File file = new File("C:\\Users\\a.patriarca\\Documents\\1milione.csv");
+    public String input()
     {
-        block = true;
+        BufferedReader br;
+        String searchFor = String.valueOf(Math.round(Math.random()*1000000));
         try
         {
-            Thread.sleep(Math.round(Math.random()*10));
+            try (FileReader fr = new FileReader(file))
+            {
+                br = new BufferedReader(new FileReader(file));
+                String line = br.readLine();
+                while (line != null && !line.startsWith(";"))
+                {
+                    line = br.readLine();
+                }
+                br.close();
+            }
         }
-        catch (InterruptedException ex)
+        catch (FileNotFoundException ex)
         {
-            Logger.getLogger(EazyPipe.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DummyIO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        block = false;
-        return String.valueOf(System.currentTimeMillis());
-    }
-    
-    public synchronized boolean isBlocked()
-    {
-        return block;
+        catch (IOException ex)
+        {
+            Logger.getLogger(DummyIO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return searchFor;                
     }
 }
