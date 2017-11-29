@@ -5,6 +5,7 @@
  */
 package xyz.scarabya.eazypipetest;
 
+import java.io.FileNotFoundException;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import xyz.scarabya.eazypipe.EazyPipe;
 import xyz.scarabya.eazypipe.EazyPipeStart;
@@ -20,8 +21,9 @@ public class VerticalTest
 
     /**
      * @param args the command line arguments
+     * @throws java.io.FileNotFoundException
      */
-    public static void main(String[] args)
+    public static void main(String[] args) throws FileNotFoundException
     {
         Producer prod = new Producer();
         
@@ -31,10 +33,12 @@ public class VerticalTest
         
         Banana banana = new Banana();
         
-        DummyIO ioDisk = new DummyIO();
         
-        EazyPipe vout = EazyPipeStart.runPipe(new Pipeable(prod, "produce", 2, ioDisk, true))
-                .runPipe(new Pipeable(cons, "consume", 2, banana, true))
+        
+        //DummyIO ioDisk = new DummyIO();
+        
+        EazyPipe vout = EazyPipeStart.runPipe(new Pipeable(prod, "produce", 10, true))
+                .runPipe(new Pipeable(cons, "consume", 10, banana, true))
                 .runPipe(finalCons);
         
         //EazyPipe vout = vert.runPipe(new Pipeable(prod, "produce"));

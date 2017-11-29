@@ -5,11 +5,10 @@
  */
 package xyz.scarabya.eazypipetest;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -19,32 +18,33 @@ import java.util.logging.Logger;
  */
 public class DummyIO
 {
-    private final File file = new File("C:\\Users\\a.patriarca\\Documents\\1milione.csv");
-    public String input()
-    {
-        BufferedReader br;
-        String searchFor = String.valueOf(Math.round(Math.random()*1000000));
-        try
+    //private final File file = new File("C:\\Users\\a.patriarca\\Documents\\1milione.csv");
+    private final File file = new File("C:\\Users\\a.patriarca\\Documents\\testFile.dat");
+    private final boolean random = true;
+    private final int numOfBlocks = 10;
+    private final int blockSize = 4096;
+    private final RandomAccessFile rAccFile;
+    private final byte [] blockArr = new byte [blockSize];
+    
+    public DummyIO() throws FileNotFoundException
+    {        
+        rAccFile = new RandomAccessFile(file,"rws");
+        for (int b=0; b<blockArr.length; b++)
         {
-            try (FileReader fr = new FileReader(file))
-            {
-                br = new BufferedReader(new FileReader(file));
-                String line = br.readLine();
-                while (line != null && !line.startsWith(";"))
-                {
-                    line = br.readLine();
-                }
-                br.close();
+            if (b%2==0) {
+                blockArr[b]=(byte)0xFF;
             }
-        }
-        catch (FileNotFoundException ex)
+        }  
+    }
+    
+    public synchronized String input() throws IOException
+    {   
+        for (int b=0; b<numOfBlocks; b++)
         {
-            Logger.getLogger(DummyIO.class.getName()).log(Level.SEVERE, null, ex);
+            long rLoc = Math.round(Math.random()*(numOfBlocks-1));
+            rAccFile.seek(rLoc*blockSize);
+            rAccFile.write(blockArr, 0, blockSize);
         }
-        catch (IOException ex)
-        {
-            Logger.getLogger(DummyIO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return searchFor;                
+        return "Done ";                
     }
 }
