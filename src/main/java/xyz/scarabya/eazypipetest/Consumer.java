@@ -11,33 +11,23 @@ import xyz.scarabya.eazypipe.ThreadPipe;
  *
  * @author a.patriarca
  */
-public class Consumer
-{
+public class Consumer {
 
-    public void consume(ThreadPipe pipe) throws InterruptedException
-    {
-        while (pipe.run())
-        {
+    public void consume(ThreadPipe pipe) throws InterruptedException {
+        while (pipe.run()) {
             String s = (String) pipe.input();
-            if (s != null)
-            {
-                if(pipe.args() != null)
-                {
-                    if(pipe.args().getClass() == Banana.class)
-                    {
+            if (s != null) {
+                if (pipe.args() != null) {
+                    if (pipe.args().getClass() == Banana.class) {
                         Banana banana = (Banana) pipe.args();
                         pipe.output(s + banana.getBanana());
-                    }
-                    else
-                    {
+                    } else {
                         pipe.output(s + pipe.args());
                     }
-                }
-                else
-                {
+                } else {
                     pipe.output(s + " TEST CONSUMER");
                 }
-                //Thread.sleep(Math.round(Math.random()*10));
+                //Thread.sleep(Math.round(Math.random() * 10));
             }
         }
     }

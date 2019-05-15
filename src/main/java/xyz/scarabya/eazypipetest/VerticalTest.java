@@ -10,7 +10,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import xyz.scarabya.eazypipe.EazyPipe;
 import xyz.scarabya.eazypipe.EazyPipeStart;
 import xyz.scarabya.eazypipe.Pipeable;
-import xyz.scarabya.eazypipe.ThreadPipeManager;
 
 /**
  *
@@ -29,36 +28,25 @@ public class VerticalTest
         
         Consumer cons = new Consumer();
         
-        Pipeable finalCons = new Pipeable(cons, "consume", 10, true);
+        Pipeable finalCons = new Pipeable(cons, "consume", 1);
+        Pipeable prodPipe = new Pipeable(prod, "produceRandomString", 1, 10);
         
-        Banana banana = new Banana();
+        EazyPipe vout = EazyPipeStart.runPipe(prodPipe).runPipe(finalCons);
         
-        
-        
-        //DummyIO ioDisk = new DummyIO();
-        
-        EazyPipe vout = EazyPipeStart.runPipe(new Pipeable(prod, "produce", 10, true))
-                .runPipe(new Pipeable(cons, "consume", 10, banana, true))
-                .runPipe(finalCons);
-        
-        //EazyPipe vout = vert.runPipe(new Pipeable(prod, "produce"));
-        
-        ThreadPipeManager.startAutoManager(vout);
-        
-        printChannel(vout.getOutput());
+        printChannel(vout);
         
         
     }
     
-    public static void printChannel(ConcurrentLinkedQueue channel)
+    public static void printChannel(EazyPipe channel)
     {
-        while (true)
+        ConcurrentLinkedQueue queue=channel.getOutput();
+        while (!channel.areAllReady() || !queue.isEmpty())
         {
-            String s = (String) channel.poll();
-            if(false)
+            String s = (String) queue.poll();
+            if(s!=null)
             {
-                if (s != null)
-                    System.out.println(s);
+                System.out.println(s);
             }
         }
     }

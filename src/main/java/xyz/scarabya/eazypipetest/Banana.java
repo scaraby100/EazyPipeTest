@@ -9,10 +9,9 @@ package xyz.scarabya.eazypipetest;
  *
  * @author a.patriarca
  */
-public class Banana
-{
-    public String getBanana()
-    {
+public class Banana {
+
+    public String getBanana() {
         return " I'M A BANANA! ";
     }
 }
